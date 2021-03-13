@@ -1,0 +1,15 @@
+
+
+# for python
+__pycache__
+
+# for IntelliJ
+.idea
+
+# for project
+*.csv
+*.xml
+
+
+# for Mac elite
+.DS_Store
