@@ -25,7 +25,6 @@ class Stats:
 
 class Metric:
     def __init__(self, **kwargs):
-        # TODO: don't forget scope!
         self.id: str = kwargs.get("id", "")
         self.description: str = kwargs.get("description", "")
         self.max: str = kwargs.get("max", "")
@@ -54,32 +53,32 @@ class Metric:
 
     @staticmethod
     def _value_as_line(value: Value):
-        return "{name};{source};{package};{value};{inrange}".format(
-            name=value.name,
-            source=value.source,
-            package=value.package,
-            value=value.value,
-            inrange=value.in_range
+        return "{target_name};{target_source};{target_package};{target_value};{target_in_range}".format(
+            target_name=value.name,
+            target_source=value.source,
+            target_package=value.package,
+            target_value=value.value,
+            target_in_range=value.in_range
         )
 
     def _metrics_info_as_line(self) -> str:
-        return "{scope};{id};{desc};{max};{min};{hint}".format(
+        return "{scope};{metric_id};{metric_desc};{metric_max};{metric_min};{metric_hint}".format(
             scope=self.scope,
-            id=self.id,
-            desc=self.description,
-            max=self.max,
-            min=self.min,
-            hint=self.hint
+            metric_id=self.id,
+            metric_desc=self.description,
+            metric_max=self.max,
+            metric_min=self.min,
+            metric_hint=self.hint
         )
 
     def _stats_as_line(self) -> str:
-        return "{per};{avg};{stddev};{max};{total};{max_in_range}".format(
-            per=self.stats.per,
-            avg=self.stats.avg,
-            stddev=self.stats.stddev,
-            max=self.stats.max,
-            total=self.stats.total,
-            max_in_range=self.stats.max_in_range
+        return "{stats_per};{stats_avg};{stats_stddev};{stats_max};{stats_total};{stats_max_in_range}".format(
+            stats_per=self.stats.per,
+            stats_avg=self.stats.avg,
+            stats_stddev=self.stats.stddev,
+            stats_max=self.stats.max,
+            stats_total=self.stats.total,
+            stats_max_in_range=self.stats.max_in_range
         )
 
 
@@ -89,24 +88,25 @@ class Metrics3XMLParser:
     def get_columns_line() -> str:
         column_titles: List[str] = [
             "scope",
+
             "metric_id",
             "metric_desc",
             "metric_max",
             "metric_min",
             "metric_hint",
 
-            "values_per",
-            "values_avg",
-            "values_stddev",
-            "values_max",
-            "values_total",
-            "values_max_in_range",
+            "stats_per",
+            "stats_avg",
+            "stats_stddev",
+            "stats_max",
+            "stats_total",
+            "stats_max_in_range",
 
-            "value_name",
-            "value_source",
-            "value_package",
-            "value",
-            "value_in_range"
+            "target_name",
+            "target_source",
+            "target_package",
+            "target_value",
+            "target_in_range"
         ]
 
         return ";".join(column_titles)
@@ -128,7 +128,7 @@ class Metrics3XMLParser:
         scope: str = root.attrib.get("scope")
 
         for m in root.iterfind('Metric'):
-            metric: Metric = Metric(**m.attrib, scope=scope)
+            metric: Metric = Metric(scope=scope, **m.attrib)
 
             values: List[Value] = [Value(**v.attrib) for v in m.iterfind('.//Value')]
 
