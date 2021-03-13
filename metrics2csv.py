@@ -118,8 +118,13 @@ class Metrics3XMLParser:
         with open(xml_file_path, "r") as xml:
 
             xml_content = xml.read()
+            # for XML understanding
             xml_content = Metrics3XMLParser.remove_namespace(xml_content)
+            # for CSV
             xml_content = xml_content.replace(";", "")
+            # for xml parsing
+            xml_content = xml_content.replace("\&lt", "")
+            xml_content = xml_content.replace("&gt", "")
 
         root = Etree.fromstring(xml_content)
 
