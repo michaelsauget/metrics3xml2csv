@@ -147,9 +147,6 @@ class Metrics3XMLParser:
         return re.sub(r"xmlns=\".*\"", '', xml_content)
 
 
-m: List[Metric] = Metrics3XMLParser.parse("xml/xml1.xml")
-
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--output', help='Path for the csv output', required=True)
