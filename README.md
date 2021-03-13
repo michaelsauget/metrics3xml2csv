@@ -20,13 +20,13 @@ $ python metrics2csv.py -o ./output.csv -f xml/xml1.xml xml/xml2.xml xml/xml3.xm
 ### Using Docker
 You only have to specify the XML files you want to merge into your CSV. You can put 1 or as many as you wish.
 ```shell script
-$ docker build .
+$ docker build . --tag metrics2csv
 $ docker run -v ${PWD}/output:/usr/workspace/output metrics2csv -f <PATH_TO_FILE_1> <PATH_TO_FILE_2> <PATH_TO_FILE_3> 
 ```
 
 A working example would be:
 ```shell script
-$ docker build .
+$ docker build . --tag metrics2csv
 $ docker run -v ${PWD}/output:/usr/workspace/output metrics2csv -f path/to/file_1.xml pathto/file_2.xml path/to/file_n.xml 
 ```
 
