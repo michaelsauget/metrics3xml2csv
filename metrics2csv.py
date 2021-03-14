@@ -25,7 +25,8 @@ class Stats:
 
 class Metric:
     def __init__(self, **kwargs):
-        self.id: str = kwargs.get("id", "") + kwargs.get("id_extension", "")
+        self.id: str = kwargs.get("id", "")
+        self.code: str = kwargs.get("id", "") + "_" + kwargs.get("id_extension", "")
         self.description: str = kwargs.get("description", "")
         self.max: str = kwargs.get("max", "")
         self.min: str = kwargs.get("min", "")
@@ -62,9 +63,10 @@ class Metric:
         )
 
     def _metrics_info_as_line(self) -> str:
-        return "{scope};{metric_id};{metric_desc};{metric_max};{metric_min};{metric_hint}".format(
+        return "{scope};{metric_id};{metric_code};{metric_desc};{metric_max};{metric_min};{metric_hint}".format(
             scope=self.scope,
             metric_id=self.id,
+            metric_code=self.code,
             metric_desc=self.description,
             metric_max=self.max,
             metric_min=self.min,
@@ -90,6 +92,7 @@ class Metrics3XMLParser:
             "scope",
 
             "metric_id",
+            "metric_code",
             "metric_desc",
             "metric_max",
             "metric_min",
