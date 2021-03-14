@@ -25,7 +25,7 @@ class Stats:
 
 class Metric:
     def __init__(self, **kwargs):
-        self.id: str = kwargs.get("id", "")
+        self.id: str = kwargs.get("id", "") + kwargs.get("id_extension", "")
         self.description: str = kwargs.get("description", "")
         self.max: str = kwargs.get("max", "")
         self.min: str = kwargs.get("min", "")
@@ -133,19 +133,27 @@ class Metrics3XMLParser:
         scope: str = root.attrib.get("scope")
 
         for m in root.iterfind('Metric'):
-            metric: Metric = Metric(scope=scope, **m.attrib)
 
-            values: List[Value] = [Value(**v.attrib) for v in m.iterfind('.//Value')]
+            # values_parent = m.iterfind('.//Value/..')
 
-            values_parent = m.find('.//Values')
-            stats: Stats = Stats(**values_parent.attrib) if values_parent else Stats()
+            for values_parent in m.iterfind('.//Value/..'):
 
-            metric.with_values(values)
-            metric.with_stats(stats)
+                metric: Metric = Metric(scope=scope, **m.attrib, id_extension=values_parent.attrib.get("per", ""))
 
-            metrics.append(metric)
+                stats: Stats = Stats(**values_parent.attrib) if values_parent.tag == "Values" else Stats()
+
+                values: List[Value] = [Value(**v.attrib) for v in values_parent.iterfind('.//Value')]
+
+                metric.with_values(values)
+                metric.with_stats(stats)
+
+                metrics.append(metric)
 
         return metrics
+
+    @staticmethod
+    def _extract_values(m):
+        ...
 
     @staticmethod
     def remove_namespace(xml_content: str):
